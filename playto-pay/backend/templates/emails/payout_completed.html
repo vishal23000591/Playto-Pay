@@ -1,0 +1,31 @@
+{% extends 'emails/base.html' %}
+
+{% block content %}
+<h2>Payout Completed Successfully</h2>
+<p>Hello {{ merchant_name }},</p>
+<p>Your recent payout request has been processed and funds have been successfully transferred to your bank account.</p>
+
+<div class="stat-card">
+    <p class="stat-label">Amount Transferred</p>
+    <p class="stat-value">INR {{ amount_inr }}</p>
+</div>
+
+<table class="details-table">
+    <tr>
+        <td>Destination Bank</td>
+        <td>{{ bank_name }}</td>
+    </tr>
+    <tr>
+        <td>Account Number</td>
+        <td>****{{ account_last4 }}</td>
+    </tr>
+    <tr>
+        <td>Reference ID</td>
+        <td>{{ reference_id }}</td>
+    </tr>
+</table>
+
+<center>
+    <a href="{{ dashboard_url }}" class="btn">View Dashboard</a>
+</center>
+{% endblock %}

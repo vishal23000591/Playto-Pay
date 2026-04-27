@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fintech-bg: #0a0a0a;
+  --color-fintech-card: #171717;
+  --color-fintech-border: #262626;
+  --color-fintech-primary: #10b981; /* emerald-500 */
+  --color-fintech-primary-hover: #059669; /* emerald-600 */
+  --color-fintech-accent: #3b82f6; /* blue-500 */
+  --color-fintech-text: #f5f5f5;
+  --color-fintech-muted: #a3a3a3;
+  --color-fintech-danger: #ef4444;
+}
+
+body {
+  background-color: var(--color-fintech-bg);
+  color: var(--color-fintech-text);
+}

@@ -1,0 +1,19 @@
+{% extends 'emails/base.html' %}
+
+{% block content %}
+<h2>Test Funding Added</h2>
+<p>Hello {{ merchant_name }},</p>
+<p>Test funding has been successfully added to your Playto Pay account.</p>
+
+<div class="stat-card">
+    <p class="stat-label">Amount Added</p>
+    <p class="stat-value">INR {{ amount_inr }}</p>
+</div>
+
+<p>Your updated available balance is now <strong>INR {{ new_balance_inr }}</strong>.</p>
+<p>You can now use this balance to test payout workflows.</p>
+
+<center>
+    <a href="{{ dashboard_url }}" class="btn">View Dashboard</a>
+</center>
+{% endblock %}

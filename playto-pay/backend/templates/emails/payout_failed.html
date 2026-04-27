@@ -1,0 +1,33 @@
+{% extends 'emails/base.html' %}
+
+{% block content %}
+<h2 style="color: #ef4444;">Payout Failed</h2>
+<p>Hello {{ merchant_name }},</p>
+<p>Unfortunately, your recent payout request has failed and could not be processed by the destination bank.</p>
+
+<div class="stat-card" style="border-color: #7f1d1d;">
+    <p class="stat-label">Refunded Amount</p>
+    <p class="stat-value" style="color: #ef4444;">INR {{ amount_inr }}</p>
+</div>
+
+<p>The funds have been fully refunded to your Playto Pay available balance. You can attempt the payout again with a different bank account.</p>
+
+<table class="details-table">
+    <tr>
+        <td>Destination Bank</td>
+        <td>{{ bank_name }}</td>
+    </tr>
+    <tr>
+        <td>Account Number</td>
+        <td>****{{ account_last4 }}</td>
+    </tr>
+    <tr>
+        <td>Reference ID</td>
+        <td>{{ reference_id }}</td>
+    </tr>
+</table>
+
+<center>
+    <a href="{{ dashboard_url }}" class="btn" style="background-color: #ef4444;">View Dashboard</a>
+</center>
+{% endblock %}
