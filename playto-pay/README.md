@@ -12,6 +12,7 @@ Playto Pay is a secure, production-grade financial infrastructure platform desig
 - **Real-time Dashboard**: Advanced analytics for payout success rates, volume trends, and balance tracking.
 - **Automated Reporting**: System-generated PDF Settlement Statements and CSV exports for financial reconciliation.
 - **Asynchronous Processing**: Background bank transfers powered by Celery and Redis with intelligent retry logic.
+- **Automated Emails**: Real-time notifications for top-ups, successful settlements, and failed payouts.
 
 ---
 

@@ -84,6 +84,11 @@ Common AI Mistake: Relying solely on a balance column. If that column gets corru
 
 Our Solution: In Playto Pay, the Merchant.balance is treated as a discardable cache. We can wipe the balance column and fully reconstruct it from the LedgerEntry table at any time. This ensures 100% financial auditability.
 
+### 5. Asynchronous Email System
+Common AI Mistake: Sending emails directly inside a request-response cycle. This makes the API slow and can cause 500 errors if the SMTP server is down.
+
+Our Solution: We use Celery background tasks for all notifications. The API immediately returns a success response, while the email is queued for delivery. This ensures the user experience is never impacted by network latency from email providers.
+
 ---
 
 ## Tech Stack
