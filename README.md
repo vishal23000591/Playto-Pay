@@ -78,4 +78,4 @@ python manage.py runserver
 ---
 
 Developed by Vishal S.
-For technical details on the underlying engine, please refer to the [EXPLAINER.md](./EXPLAINER.md).
+For technical details on the underlying engine, please refer to the [EXPLAINER.md](https://github.com/vishal23000591/Playto-Pay/blob/main/playto-pay/EXPLAINER.md).
