@@ -1,58 +1,77 @@
-# 💳 Playto Pay – Merchant Payout Engine
+# Playto Pay – Payout Infrastructure for Modern Business
 
-A production-grade fintech payout infrastructure platform where Indian freelancers/agencies receive USD payments and withdraw INR payouts. Built with a focus on money integrity, concurrency control, and scalability.
+Playto Pay is a secure, production-grade financial infrastructure platform designed for agencies and businesses. It manages the entire lifecycle of merchant payouts—from balance tracking and ledger integrity to automated bank processing and financial reporting.
 
-## 🚀 Quick Start (Docker)
+---
 
-The easiest way to run the entire stack is using Docker Compose:
+## Key Features
+
+- **Double-Entry Ledger**: Every financial movement is recorded as an immutable ledger entry, ensuring a 100% auditable history.
+- **Concurrency Control**: Implements PostgreSQL row-level locking (pessimistic locking) to prevent race conditions during balance updates.
+- **Idempotency Protection**: A custom middleware-driven idempotency system ensures that no payout is ever processed twice.
+- **Real-time Dashboard**: Advanced analytics for payout success rates, volume trends, and balance tracking.
+- **Automated Reporting**: System-generated PDF Settlement Statements and CSV exports for financial reconciliation.
+- **Asynchronous Processing**: Background bank transfers powered by Celery and Redis with intelligent retry logic.
+
+---
+
+## Technical Stack
+
+- **Backend**: Django, Django Rest Framework (Python)
+- **Frontend**: React, Vite, Tailwind CSS, TanStack Query
+- **Database**: PostgreSQL (Production), SQLite (Development)
+- **Task Queue**: Celery with Redis
+- **Security**: JWT Authentication, CSRF Protection, strictly scoped API permissions
+- **Reporting**: ReportLab for PDF generation
+
+---
+
+## Getting Started
+
+### Local Setup (Recommended)
+The easiest way to run the project locally is using the provided automation script:
 
 ```bash
-docker-compose up --build
+./local.sh
 ```
 
-Once running:
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **Seed Data**: Run a POST request to `http://localhost:8000/api/v1/seed-data/` to initialize a default merchant with balance.
+This script will:
+1. Start the Django development server.
+2. Spin up Redis and the Celery worker.
+3. Serve the integrated React frontend.
 
-## 🛠 Tech Stack
+Access the application at: `http://localhost:8000`
 
-- **Backend**: Django, DRF, PostgreSQL, Celery, Redis
-- **Frontend**: React (Vite), Tailwind CSS, Recharts, React Query
-- **Orchestration**: Docker Compose
+### Production Deployment
+The application is optimized for deployment on Render.
+- **Production URL**: https://playto-pay.onrender.com
+- **Architecture**: Single-container deployment serving both the API and the React build.
 
-## 🏗 Setup & Development (Local)
+---
 
-### Backend
-1. `cd backend`
-2. `python -m venv venv && source venv/bin/activate`
-3. `pip install -r requirements.txt`
-4. `python manage.py migrate`
-5. `python manage.py runserver`
+## Project Structure
 
-### Celery Worker
-```bash
-celery -A config worker -l info
-```
+- `backend/`: Django core, apps (merchants, payouts, ledger, etc.), and configuration.
+- `frontend/`: React source code, components, and Vite configuration.
+- `frontend/dist/`: Production build of the frontend, served by Django.
+- `EXPLAINER.md`: Deep dive into the architectural decisions and engineering principles.
 
-### Frontend
-1. `cd frontend`
-2. `npm install`
-3. `npm run dev`
+---
 
-## 🧪 Testing
+## Testing
 
-Run backend tests for concurrency, idempotency, and retries:
+The backend includes a comprehensive test suite covering:
+- **Concurrency**: Validating row-level locks under high load.
+- **Idempotency**: Ensuring duplicate requests do not create duplicate payouts.
+- **Integrity**: Verifying that the ledger correctly matches the cached merchant balance.
 
+To run tests:
 ```bash
 cd backend
 pytest
 ```
 
-## 🔐 Core Fintech Principles Implemented
+---
 
-1. **Money Integrity**: Balance is verified via ledger aggregation.
-2. **Concurrency Protection**: `select_for_update()` ensures only one payout request can modify a merchant's balance at a time.
-3. **Idempotency**: `Idempotency-Key` header ensures duplicate requests return the same response without duplicate processing.
-4. **State Machine**: Strict transitions: `pending` -> `processing` -> `completed/failed`.
-5. **Retry Logic**: Celery tasks with exponential backoff and atomic refunds on final failure.
+Developed by Vishal S.
+For technical details on the underlying engine, please refer to the [EXPLAINER.md](./EXPLAINER.md).
