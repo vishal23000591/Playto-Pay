@@ -41,12 +41,15 @@ This script will:
 2. Spin up Redis and the Celery worker.
 3. Serve the integrated React frontend.
 
-Access the application at: `http://localhost:8000`
+Access the application at: https://playto-pay.onrender.com
 
-### Production Deployment
-The application is optimized for deployment on Render.
-- **Production URL**: https://playto-pay.onrender.com
-- **Architecture**: Single-container deployment serving both the API and the React build.
+### Demo Credentials
+For testing purposes, you can use the following account:
+- **Email**: demo@playtopay.com
+- **Password**: demo123
+
+### Sample Data
+The system is preloaded with sample transactions, payouts, and merchant data for testing.
 
 ---
 
