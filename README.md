@@ -69,7 +69,7 @@ The backend includes a comprehensive test suite covering:
 To run tests:
 ```bash
 cd backend
-pytest
+python manage.py runserver
 ```
 
 ---
