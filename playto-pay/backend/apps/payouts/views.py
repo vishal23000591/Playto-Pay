@@ -397,7 +397,7 @@ class TopUpView(views.APIView):
                 'merchant_name': merchant.name,
                 'amount_inr': f"{amount_paise / 100:.2f}",
                 'new_balance_inr': f"{merchant.available_balance_paise / 100:.2f}",
-                'dashboard_url': 'http://localhost:5173/dashboard'
+                'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
             })
             send_mail(
                 subject='Test Funding Added - Playto Pay',

@@ -15,6 +15,8 @@ SECRET_KEY = env('SECRET_KEY', default='django-insecure-default-key-for-dev')
 DEBUG = env('DEBUG', default=True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=['https://playto-pay.onrender.com'])
+FRONTEND_URL = env('FRONTEND_URL', default='https://playto-pay.onrender.com')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

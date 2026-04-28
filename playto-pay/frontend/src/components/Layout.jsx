@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  LayoutDashboard, Send, FileText, Wallet, LogOut, User, Building2, AlertTriangle, ShieldCheck, BarChart2, Settings as SettingsIcon 
+import {
+  LayoutDashboard, Send, FileText, Wallet, LogOut, User, Building2, AlertTriangle, ShieldCheck, BarChart2, Settings as SettingsIcon
 } from 'lucide-react';
 import Modal from './Modal';
 
@@ -43,10 +43,9 @@ const Layout = ({ children }) => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  isActive 
-                    ? 'bg-fintech-primary text-black font-bold shadow-lg shadow-fintech-primary/20' 
-                    : 'text-fintech-muted hover:bg-white/5 hover:text-white'
+                `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+                  ? 'bg-fintech-primary text-black font-bold shadow-lg shadow-fintech-primary/20'
+                  : 'text-fintech-muted hover:bg-white/5 hover:text-white'
                 }`
               }
             >
@@ -66,7 +65,7 @@ const Layout = ({ children }) => {
               <p className="text-xs text-fintech-muted truncate">ID: {user?.id}</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-fintech-danger hover:bg-red-500/10 transition-colors"
           >
@@ -77,15 +76,20 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-72">
-        <div className="max-w-6xl mx-auto p-12">
+      <main className="flex-1 ml-72 flex flex-col min-h-screen">
+        <div className="max-w-6xl mx-auto p-12 flex-1 w-full">
           {children}
         </div>
+        <footer className="p-8 text-center border-t border-white/5">
+          <p className="text-[10px] text-fintech-muted uppercase tracking-widest">
+            With love <a href="https://www.linkedin.com/in/vishal-s-bab6a6301/" target="_blank" rel="noopener noreferrer" className="text-fintech-primary hover:underline font-bold">Vishal S 🤍</a>
+          </p>
+        </footer>
       </main>
 
-      <Modal 
-        isOpen={isLogoutModalOpen} 
-        onClose={() => setIsLogoutModalOpen(false)} 
+      <Modal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
         title="Confirm Logout"
       >
         <div className="text-center space-y-6">
@@ -99,13 +103,13 @@ const Layout = ({ children }) => {
             </p>
           </div>
           <div className="flex gap-4">
-            <button 
+            <button
               onClick={() => setIsLogoutModalOpen(false)}
               className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/10"
             >
               Cancel
             </button>
-            <button 
+            <button
               onClick={confirmLogout}
               className="flex-1 py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-red-500/20"
             >

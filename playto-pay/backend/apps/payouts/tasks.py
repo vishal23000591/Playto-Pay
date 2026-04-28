@@ -76,7 +76,7 @@ def complete_payout(payout):
             'bank_name': payout.bank_account.bank_name,
             'account_last4': payout.bank_account.account_number[-4:],
             'reference_id': f"payout_fin_{payout.id}",
-            'dashboard_url': 'http://localhost:5173/dashboard'
+            'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
         })
         send_mail(
             subject='Payout Completed - Playto Pay',
@@ -122,7 +122,7 @@ def fail_payout(payout):
             'bank_name': payout.bank_account.bank_name,
             'account_last4': payout.bank_account.account_number[-4:],
             'reference_id': f"payout_ref_{payout.id}",
-            'dashboard_url': 'http://localhost:5173/dashboard'
+            'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
         })
         send_mail(
             subject='Payout Failed - Playto Pay',
