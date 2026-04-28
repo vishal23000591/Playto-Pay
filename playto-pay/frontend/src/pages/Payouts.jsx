@@ -95,7 +95,7 @@ const Payouts = () => {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Payout Form */}
+        {}
         <div className="lg:col-span-5 bg-fintech-card rounded-3xl border border-fintech-border p-8 shadow-2xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-fintech-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-fintech-primary/10 transition-colors" />
           
@@ -218,7 +218,7 @@ const Payouts = () => {
           </div>
         </div>
 
-        {/* Payout History */}
+        {}
         <div className="lg:col-span-7 bg-fintech-card rounded-3xl border border-fintech-border shadow-2xl flex flex-col overflow-hidden">
           <div className="p-8 border-b border-fintech-border flex items-center justify-between">
             <div className="flex items-center gap-4">

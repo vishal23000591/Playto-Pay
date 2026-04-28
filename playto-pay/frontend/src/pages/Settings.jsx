@@ -42,7 +42,7 @@ const Settings = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Webhooks Section */}
+        {}
         <div className="bg-fintech-card rounded-3xl border border-fintech-border p-8 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
@@ -72,7 +72,7 @@ const Settings = () => {
           </button>
         </div>
 
-        {/* Security Section */}
+        {}
         <div className="bg-fintech-card rounded-3xl border border-fintech-border p-8 space-y-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">

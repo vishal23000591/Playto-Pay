@@ -30,6 +30,6 @@ class BankAccount(models.Model):
 
     def save(self, *args, **kwargs):
         if self.is_default:
-            # Set other accounts of this merchant to not default
+
             BankAccount.objects.filter(merchant=self.merchant).update(is_default=False)
         super().save(*args, **kwargs)

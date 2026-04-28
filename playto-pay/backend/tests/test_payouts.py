@@ -64,12 +64,12 @@ def test_idempotency():
         'bank_account_id': bank.id
     }
     
-    # First request
+
     resp1 = client.post(reverse('payout-list'), payload, format='json', HTTP_IDEMPOTENCY_KEY=key)
     assert resp1.status_code == 201
     payout_id = resp1.data['id']
     
-    # Second request with same key
+
     resp2 = client.post(reverse('payout-list'), payload, format='json', HTTP_IDEMPOTENCY_KEY=key)
     assert resp2.status_code == 201
     
@@ -102,7 +102,7 @@ def test_retry_and_fail_refund(mocker):
         max_retries = 3
         def retry(self, *args, **kwargs): pass
 
-    # Call the undecorated function directly
+
     process_payout_task.__wrapped__(MockTask(), payout.id)
     
     payout.refresh_from_db()

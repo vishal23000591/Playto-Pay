@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen bg-fintech-bg text-fintech-text font-inter">
-      {/* Sidebar */}
+      {}
       <aside className="w-72 bg-fintech-card border-r border-fintech-border flex flex-col fixed h-full z-10">
         <div className="p-8 flex items-center gap-3">
           <div className="bg-fintech-primary p-2 rounded-lg">
@@ -75,7 +75,7 @@ const Layout = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {}
       <main className="flex-1 ml-72 flex flex-col min-h-screen">
         <div className="max-w-6xl mx-auto p-12 flex-1 w-full">
           {children}

@@ -60,7 +60,7 @@ class SignupView(views.APIView):
             password=password
         )
         
-        # Pure production: start with 0 balance
+
         merchant = Merchant.objects.create(
             user=user,
             name=merchant_name,

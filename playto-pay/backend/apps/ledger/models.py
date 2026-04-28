@@ -3,11 +3,11 @@ from apps.merchants.models import Merchant
 
 class LedgerEntry(models.Model):
     ENTRY_TYPES = (
-        ('CREDIT', 'Credit'),    # External funds in (Top-up)
-        ('DEBIT', 'Debit'),      # External funds out (Payout Success)
-        ('HOLD', 'Hold'),        # Funds frozen for payout
-        ('RELEASE', 'Release'),  # Hold removed (Success or Failure)
-        ('REFUND', 'Refund'),    # Funds returned to available (Failure)
+        ('CREDIT', 'Credit'),
+        ('DEBIT', 'Debit'),
+        ('HOLD', 'Hold'),
+        ('RELEASE', 'Release'),
+        ('REFUND', 'Refund'),
     )
 
     merchant = models.ForeignKey(Merchant, on_delete=models.PROTECT, related_name='ledger_entries')

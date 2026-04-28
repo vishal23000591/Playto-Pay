@@ -20,14 +20,14 @@ def process_payout_task(self, payout_id):
         if payout.status != 'pending':
             return f"Payout {payout_id} already processed"
 
-        # Mark as processing
+
         payout.status = 'processing'
         payout.save()
 
-        # INCREASED DELAY for visibility
+
         time.sleep(20)
 
-        # 100% Success
+
         complete_payout(payout)
         return f"Payout {payout_id} completed successfully"
 
@@ -43,7 +43,7 @@ def process_payout_task(self, payout_id):
 def complete_payout(payout):
     merchant = Merchant.objects.select_for_update().get(id=payout.merchant.id)
     
-    # Withdrawal Success: Clear Held
+
     merchant.held_balance_paise -= payout.amount_paise
     merchant.save()
 
@@ -51,9 +51,9 @@ def complete_payout(payout):
     payout.processed_at = payout.updated_at
     payout.save()
 
-    # Ledger entries:
-    # 1. RELEASE the hold (Net 0)
-    # 2. DEBIT the final amount (Net -Amount)
+
+
+
     LedgerEntry.objects.create(
         merchant=merchant,
         type='RELEASE',
@@ -93,7 +93,7 @@ def complete_payout(payout):
 def fail_payout(payout):
     merchant = Merchant.objects.select_for_update().get(id=payout.merchant.id)
     
-    # Refund: Move from HELD back to AVAILABLE
+
     merchant.held_balance_paise -= payout.amount_paise
     merchant.available_balance_paise += payout.amount_paise
     merchant.save()

@@ -18,7 +18,7 @@ class Payout(models.Model):
     attempts = models.IntegerField(default=0)
     idempotency_key = models.UUIDField(unique=True, null=True, blank=True)
     
-    # Advanced Fintech Features
+
     scheduled_at = models.DateTimeField(null=True, blank=True)
     risk_score = models.IntegerField(default=0)
     fraud_reason = models.TextField(null=True, blank=True)

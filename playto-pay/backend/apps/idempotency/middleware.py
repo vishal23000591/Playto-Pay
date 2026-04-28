@@ -23,9 +23,9 @@ class IdempotencyMiddleware:
             print(f"DEBUG: Invalid Idempotency-Key format: {idempotency_key_header}")
             return JsonResponse({'error': 'Invalid Idempotency-Key format.'}, status=400)
 
-        # For this simplicity, we assume merchant_id might be in body. 
-        # But for global middleware we might just check key only if merchant is not yet auth'd.
-        # Ideally, we'd extract merchant from request.user.
+
+
+
         
         try:
             body = json.loads(request.body)
@@ -33,7 +33,7 @@ class IdempotencyMiddleware:
         except Exception:
             merchant_id = None
 
-        # Try to find existing key
+
         existing_key = IdempotencyKey.objects.filter(key=key_uuid, merchant_id=merchant_id).first()
         
         if existing_key:
@@ -41,10 +41,10 @@ class IdempotencyMiddleware:
                 print(f"DEBUG: Returning cached response for key {key_uuid}: {existing_key.response}")
                 return JsonResponse(existing_key.response, status=existing_key.status_code)
             else:
-                # Still processing
+
                 return JsonResponse({'error': 'Request is currently being processed.'}, status=409)
 
-        # Create lock key
+
         idem_obj = IdempotencyKey.objects.create(
             key=key_uuid,
             merchant_id=merchant_id,
@@ -56,9 +56,9 @@ class IdempotencyMiddleware:
         response = self.get_response(request)
 
         if hasattr(request, '_idempotency_obj'):
-            # Only save successful or predictable 4xx responses, skip 5xx?
-            # Save it anyway.
-            # Parse json response if possible
+
+
+
             try:
                 resp_data = json.loads(response.content)
             except Exception:

@@ -6,7 +6,7 @@ from apps.payouts.models import Payout
 from apps.merchants.models import Merchant
 
 class AdminAnalyticsView(views.APIView):
-    # In production, this would be IsAdminUser
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

@@ -17,7 +17,7 @@ class AuditLog(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name='audit_logs')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=50, choices=ACTION_CHOICES)
-    resource_type = models.CharField(max_length=50) # e.g., 'Payout', 'BankAccount'
+    resource_type = models.CharField(max_length=50)
     resource_id = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)

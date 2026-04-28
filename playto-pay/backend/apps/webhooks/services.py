@@ -13,8 +13,8 @@ class WebhookService:
                 event_type=event_type,
                 payload=payload
             )
-            # In production, this would be a background task
-            # For now, we'll implement the logic that a task would call
+
+
             WebhookService.send_webhook(event.id)
 
     @staticmethod

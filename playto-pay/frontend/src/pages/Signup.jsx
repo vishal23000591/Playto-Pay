@@ -10,7 +10,7 @@ const Signup = () => {
   const [merchantName, setMerchantName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth(); // We can login automatically after signup
+  const { login } = useAuth(); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,10 +24,10 @@ const Signup = () => {
         merchant_name: merchantName
       });
       
-      // Store tokens and set user state (mimic login behavior)
+      
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
-      window.location.href = '/dashboard'; // Hard reload to refresh auth state
+      window.location.href = '/dashboard'; 
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed. Check your details.');
     } finally {

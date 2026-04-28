@@ -50,7 +50,7 @@ class PayoutViewSet(viewsets.ModelViewSet):
         
         try:
             payout = PayoutService.create_payout(
-                merchant_id=request.user.merchant.id, # Use logged-in merchant
+                merchant_id=request.user.merchant.id,
                 bank_account_id=serializer.validated_data['bank_account_id'],
                 amount_paise=serializer.validated_data['amount_paise'],
                 idempotency_key_str=idempotency_key
@@ -63,7 +63,7 @@ class DashboardView(views.APIView):
     def get(self, request):
         merchant = request.user.merchant
         
-        # Integrity Check: Total Assets (Available + Held) must match Ledger Final In/Out
+
         ledger_stats = LedgerEntry.objects.filter(merchant=merchant).aggregate(
             total_in=Sum('amount_paise', filter=views.models.Q(type__in=['CREDIT', 'REFUND'])),
             total_out=Sum('amount_paise', filter=views.models.Q(type__in=['DEBIT']))
@@ -89,7 +89,7 @@ class DashboardView(views.APIView):
     def get_volume_data(self, merchant):
         seven_days_ago = timezone.now().date() - timedelta(days=6)
         
-        # Aggregate daily volume
+
         daily_volume = Payout.objects.filter(
             merchant=merchant,
             status='completed',
@@ -100,7 +100,7 @@ class DashboardView(views.APIView):
             volume=Sum('amount_paise')
         ).order_by('date')
 
-        # Format for chart (Last 7 days)
+
         volume_map = { (seven_days_ago + timedelta(days=i)): 0 for i in range(7) }
         for entry in daily_volume:
             volume_map[entry['date']] = entry['volume'] / 100
@@ -184,7 +184,7 @@ class PayoutPDFExportView(views.APIView):
         merchant = request.user.merchant
         payouts = Payout.objects.filter(merchant=merchant).order_by('-created_at')
         
-        # --- PREPARE DATA ---
+
         stats = payouts.aggregate(
             total_requests=Count('id'),
             success_count=Count('id', filter=Q(status='completed')),
@@ -198,13 +198,13 @@ class PayoutPDFExportView(views.APIView):
         
         success_rate = (stats['success_count'] / stats['total_requests'] * 100) if stats['total_requests'] > 0 else 100
 
-        # Reconciliation Logic
+
         ledger_stats = LedgerEntry.objects.filter(merchant=merchant).aggregate(
             total_credits=Sum('amount_paise', filter=Q(type='CREDIT')),
             total_refunds=Sum('amount_paise', filter=Q(type='REFUND')),
             total_debits=Sum('amount_paise', filter=Q(type='DEBIT'))
         )
-        opening_bal = 0 # In a real app, this would be balance at start_date
+        opening_bal = 0
         closing_bal = merchant.available_balance_paise + merchant.held_balance_paise
 
         buffer = io.BytesIO()
@@ -212,22 +212,22 @@ class PayoutPDFExportView(views.APIView):
         elements = []
         styles = getSampleStyleSheet()
 
-        # Custom Styles
+
         title_style = ParagraphStyle('MainTitle', parent=styles['Heading1'], fontSize=22, textColor=colors.HexColor("#111827"), spaceAfter=2, fontName='Helvetica-Bold')
         subtitle_style = ParagraphStyle('SubTitle', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor("#6B7280"), spaceAfter=25, letterSpacing=1)
         section_title = ParagraphStyle('SectionTitle', parent=styles['Heading2'], fontSize=11, textColor=colors.HexColor("#111827"), spaceBefore=20, spaceAfter=12, fontName='Helvetica-Bold', borderPadding=5, letterSpacing=0.5)
         card_label = ParagraphStyle('CardLabel', fontSize=7, textColor=colors.HexColor("#9CA3AF"), alignment=1, fontName='Helvetica-Bold')
         card_value = ParagraphStyle('CardValue', fontSize=15, textColor=colors.HexColor("#111827"), fontName='Helvetica-Bold', alignment=1)
 
-        # --- BRANDING & HEADER ---
-        # Fixed logo positioning and character encoding (using INR instead of symbol)
+
+
         
         logo_data = [[
             Paragraph("PLAYTO PAY", title_style),
-            Drawing(40, 40) # Placeholder for logo drawing
+            Drawing(40, 40)
         ]]
         
-        # Redraw Logo Drawing properly
+
         logo_drawing = Drawing(40, 40)
         logo_drawing.add(Rect(0, 5, 30, 30, fillColor=colors.HexColor("#10B981"), strokeColor=None, rx=6, ry=6))
         logo_drawing.add(Rect(7, 12, 16, 16, fillColor=colors.white, strokeColor=None, rx=3, ry=3))
@@ -240,7 +240,7 @@ class PayoutPDFExportView(views.APIView):
         elements.append(header_top_table)
         elements.append(Paragraph("OFFICIAL FINANCIAL SETTLEMENT STATEMENT", subtitle_style))
         
-        # Top-right contact block using a table
+
         contact_data = [[
             Paragraph(f"<font color='#9CA3AF'>ISSUED TO</font><br/><b>{merchant.name}</b><br/>{merchant.email}<br/>MID: {merchant.id}", styles['Normal']),
             Paragraph(f"<font color='#9CA3AF'>DETAILS</font><br/><b>Statement:</b> #{str(uuid.uuid4())[:8].upper()}<br/><b>Date:</b> {timezone.now().strftime('%d %b %Y')}<br/><b>Currency:</b> INR", styles['Normal'])
@@ -250,10 +250,10 @@ class PayoutPDFExportView(views.APIView):
         elements.append(contact_table)
         elements.append(Spacer(1, 25))
 
-        # --- EXECUTIVE SUMMARY (CARDS) ---
+
         elements.append(Paragraph("EXECUTIVE SUMMARY", section_title))
         
-        # Styled Cards with better spacing and using 'INR' text
+
         summary_cards = [
             [
                 [Paragraph("TOTAL REQUESTS", card_label), Spacer(1, 4), Paragraph(str(stats['total_requests']), card_value)],
@@ -281,7 +281,7 @@ class PayoutPDFExportView(views.APIView):
             elements.append(t)
             elements.append(Spacer(1, 10))
 
-        # --- RECONCILIATION ---
+
         elements.append(Paragraph("WALLET RECONCILIATION", section_title))
         recon_data = [
             ["NARRATIVE", "CREDITS (INR)", "DEBITS (INR)", "BALANCE (INR)"],
@@ -307,7 +307,7 @@ class PayoutPDFExportView(views.APIView):
         elements.append(recon_table)
         elements.append(Spacer(1, 30))
 
-        # --- TRANSACTION TABLE ---
+
         elements.append(Paragraph("TRANSACTION LEDGER", section_title))
         
         tx_data = [['DATE', 'REFERENCE', 'DESTINATION', 'ACCOUNT', 'AMOUNT', 'STATUS']]
@@ -338,7 +338,7 @@ class PayoutPDFExportView(views.APIView):
         ]))
         elements.append(t)
 
-        # --- FOOTER ---
+
         def add_footer(canvas, doc):
             canvas.saveState()
             canvas.setFont('Helvetica', 8)

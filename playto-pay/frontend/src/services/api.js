@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Interceptor to add JWT token
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   if (token) {
@@ -19,14 +19,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor to handle token expiration
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      // Optional: redirect to login if not already there
+      
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }

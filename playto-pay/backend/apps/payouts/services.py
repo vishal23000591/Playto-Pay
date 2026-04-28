@@ -15,34 +15,34 @@ logger = logging.getLogger(__name__)
 
 def background_process_payout(payout_id):
     try:
-        # Initial delay for UI refresh
+
         time.sleep(2)
         
         payout = Payout.objects.get(id=payout_id)
         if payout.status != 'pending':
             return
 
-        # If flagged for fraud, we might pause here or require manual approval
-        # For now, we process but log the risk
+
+
         
-        # Mark as processing
+
         payout.status = 'processing'
         payout.save()
 
-        # Simulated Bank Work (15 seconds)
+
         time.sleep(15)
 
-        # Finalize
+
         complete_payout(payout)
         
-        # Trigger Webhook
+
         WebhookService.trigger_event(
             payout.merchant, 
             'payout.completed', 
             {'payout_id': str(payout.id), 'amount': payout.amount_paise}
         )
         
-        # Audit Log
+
         AuditService.log(
             payout.merchant, 'PAYOUT_COMPLETE', 'Payout', payout.id,
             f"Successfully withdrew ₹{payout.amount_paise/100:.2f}"
@@ -69,11 +69,11 @@ class PayoutService:
         if merchant.available_balance_paise < amount_paise:
             raise ValidationError("Insufficient balance")
 
-        # --- Fraud Detection Logic ---
+
         risk_score = 0
         fraud_reasons = []
         
-        # Rule 1: Velocity check (recent payouts)
+
         recent_count = Payout.objects.filter(
             merchant=merchant, 
             created_at__gte=timezone.now() - timezone.timedelta(minutes=5)
@@ -82,19 +82,19 @@ class PayoutService:
             risk_score += 50
             fraud_reasons.append("High velocity: Multiple payouts in short period")
             
-        # Rule 2: High value threshold
-        if amount_paise > 5000000: # ₹50,000
+
+        if amount_paise > 5000000:
             risk_score += 30
             fraud_reasons.append("High value: Exceeds ₹50,000 threshold")
 
         is_flagged = risk_score >= 50
 
-        # Update balances
+
         merchant.available_balance_paise -= amount_paise
         merchant.held_balance_paise += amount_paise
         merchant.save()
 
-        # Create Payout
+
         payout = Payout.objects.create(
             merchant=merchant,
             bank_account=bank_account,
@@ -107,7 +107,7 @@ class PayoutService:
             is_flagged=is_flagged
         )
 
-        # Ledger: HOLD
+
         LedgerEntry.objects.create(
             merchant=merchant,
             type='HOLD',
@@ -116,13 +116,13 @@ class PayoutService:
             description=f"Withdrawal hold for ₹{amount_paise/100:.2f}"
         )
 
-        # Audit Log
+
         AuditService.log(
             merchant, 'PAYOUT_REQUEST', 'Payout', payout.id,
             f"Requested withdrawal of ₹{amount_paise/100:.2f}. Risk Score: {risk_score}"
         )
 
-        # Process (if not scheduled for far future)
+
         if not scheduled_at or scheduled_at <= timezone.now():
             thread = threading.Thread(target=background_process_payout, args=(payout.id,))
             thread.daemon = True

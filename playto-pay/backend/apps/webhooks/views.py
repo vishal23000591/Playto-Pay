@@ -15,6 +15,6 @@ class WebhookEndpointViewSet(viewsets.ModelViewSet):
         return WebhookEndpoint.objects.filter(merchant=self.request.user.merchant)
 
     def perform_create(self, serializer):
-        # Only allow one endpoint for now
+
         WebhookEndpoint.objects.filter(merchant=self.request.user.merchant).delete()
         serializer.save(merchant=self.request.user.merchant)
