@@ -46,7 +46,7 @@ Access the application at: https://playto-pay.onrender.com
 ### Demo Credentials
 For testing purposes, you can use the following account:
 - **Email**: demo@playtopay.com
-- **Password**: demo123
+- **Password**: demo1234
 
 ### Sample Data
 The system is preloaded with sample transactions, payouts, and merchant data for testing.
