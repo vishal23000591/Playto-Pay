@@ -375,9 +375,13 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TopUpView(views.APIView):
     def post(self, request):
-        amount_paise = request.data.get('amount_paise', 0)
-        if not amount_paise or amount_paise <= 0:
-            return Response({'error': 'Invalid amount'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            amount_paise = int(request.data.get('amount_paise', 0))
+        except (ValueError, TypeError):
+            return Response({'error': 'Invalid amount format'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if amount_paise <= 0:
+            return Response({'error': 'Amount must be greater than zero'}, status=status.HTTP_400_BAD_REQUEST)
             
         merchant = request.user.merchant
         with transaction.atomic():
@@ -405,7 +409,7 @@ class TopUpView(views.APIView):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[merchant.email],
                 html_message=html_content,
-                fail_silently=True,
+                fail_silently=False,
             )
         except Exception as e:
             print(f"Failed to send email: {e}")

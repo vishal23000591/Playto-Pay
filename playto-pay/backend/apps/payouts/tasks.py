@@ -84,7 +84,7 @@ def complete_payout(payout):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[merchant.email],
             html_message=html_content,
-            fail_silently=True,
+            fail_silently=False,
         )
     except Exception as e:
         print(f"Failed to send email: {e}")
@@ -130,7 +130,7 @@ def fail_payout(payout):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[merchant.email],
             html_message=html_content,
-            fail_silently=True,
+            fail_silently=False,
         )
     except Exception as e:
         print(f"Failed to send email: {e}")

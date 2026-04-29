@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://playto-pay.onrender.com/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:8000/api/v1' : 'https://playto-pay.onrender.com/api/v1');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
