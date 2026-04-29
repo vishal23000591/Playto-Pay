@@ -409,7 +409,7 @@ class TopUpView(views.APIView):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[merchant.email],
                 html_message=html_content,
-                fail_silently=False,
+                fail_silently=True,
             )
         except Exception as e:
             print(f"Failed to send email: {e}")
