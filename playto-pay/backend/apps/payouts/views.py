@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+import threading
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Frame, PageTemplate
@@ -396,22 +397,25 @@ class TopUpView(views.APIView):
                 reference_id=f"topup_{int(time.time())}"
             )
             
-        try:
-            html_content = render_to_string('emails/topup.html', {
-                'merchant_name': merchant.name,
-                'amount_inr': f"{amount_paise / 100:.2f}",
-                'new_balance_inr': f"{merchant.available_balance_paise / 100:.2f}",
-                'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
-            })
-            send_mail(
-                subject='Test Funding Added - Playto Pay',
-                message=f'Test funding of INR {amount_paise / 100:.2f} has been successfully added.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[merchant.email],
-                html_message=html_content,
-                fail_silently=True,
-            )
-        except Exception as e:
-            print(f"Failed to send email: {e}")
+        def send_email_async():
+            try:
+                html_content = render_to_string('emails/topup.html', {
+                    'merchant_name': merchant.name,
+                    'amount_inr': f"{amount_paise / 100:.2f}",
+                    'new_balance_inr': f"{merchant.available_balance_paise / 100:.2f}",
+                    'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
+                })
+                send_mail(
+                    subject='Test Funding Added - Playto Pay',
+                    message=f'Test funding of INR {amount_paise / 100:.2f} has been successfully added.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[merchant.email],
+                    html_message=html_content,
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print(f"Background email failed: {e}")
+
+        threading.Thread(target=send_email_async).start()
             
         return Response({'message': 'Balance added successfully', 'new_balance': merchant.available_balance_paise})
