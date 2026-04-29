@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    PayoutViewSet, DashboardView, LedgerViewSet, TopUpView,
+    PayoutViewSet, DashboardView, LedgerViewSet, TopUpView, TestEmailView,
     PayoutExportView, LedgerExportView, PayoutPDFExportView
 )
 from apps.audit.views import AuditLogViewSet
@@ -21,6 +21,7 @@ urlpatterns = [
     path('export/payouts/', PayoutExportView.as_view(), name='export-payouts'),
     path('export/ledger/', LedgerExportView.as_view(), name='export-ledger'),
     path('export/pdf/', PayoutPDFExportView.as_view(), name='export-pdf'),
+    path('test-email/', TestEmailView.as_view(), name='test-email'),
     path('topup/', TopUpView.as_view(), name='topup'),
     path('', include('apps.merchants.urls')),
 ]

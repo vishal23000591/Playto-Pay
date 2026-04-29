@@ -377,6 +377,25 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
         return LedgerEntry.objects.filter(merchant=self.request.user.merchant).order_by('-created_at')
 
 
+class TestEmailView(views.APIView):
+    permission_classes = [AllowAny]  # Allow public access for testing
+    def get(self, request):
+        try:
+            send_mail(
+                subject='Diagnostic Test - Playto Pay',
+                message='If you see this, SMTP is working perfectly on Render!',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=['vishalsuresh1975@gmail.com'],
+                fail_silently=False,
+            )
+            return Response({'status': 'success', 'message': 'Email sent successfully!'})
+        except Exception as e:
+            return Response({
+                'status': 'error', 
+                'message': str(e),
+                'details': 'Check if port 465 is open and if your App Password is correct.'
+            }, status=500)
+
 class TopUpView(views.APIView):
     def post(self, request):
         try:
