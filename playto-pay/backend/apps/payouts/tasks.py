@@ -8,6 +8,9 @@ from django.template.loader import render_to_string
 from apps.payouts.models import Payout
 from apps.ledger.models import LedgerEntry
 from apps.merchants.models import Merchant
+import logging
+
+logger = logging.getLogger(__name__)
 
 @shared_task(bind=True)
 def process_payout_task(self, payout_id):
@@ -78,16 +81,18 @@ def complete_payout(payout):
             'reference_id': f"payout_fin_{payout.id}",
             'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
         })
+        logger.info(f"Attempting payout completion email for {merchant.email}")
         send_mail(
             subject='Payout Completed - Playto Pay',
             message=f'Your payout of INR {payout.amount_paise / 100:.2f} has been completed.',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[merchant.email],
             html_message=html_content,
-            fail_silently=True,
+            fail_silently=False,
         )
+        logger.info("Payout completion email sent successfully")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        logger.error(f"Failed to send payout completion email: {e}", exc_info=True)
 
 @transaction.atomic
 def fail_payout(payout):
@@ -124,13 +129,15 @@ def fail_payout(payout):
             'reference_id': f"payout_ref_{payout.id}",
             'dashboard_url': f"{settings.FRONTEND_URL}/dashboard"
         })
+        logger.info(f"Attempting payout failure email for {merchant.email}")
         send_mail(
             subject='Payout Failed - Playto Pay',
             message=f'Your payout of INR {payout.amount_paise / 100:.2f} has failed.',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[merchant.email],
             html_message=html_content,
-            fail_silently=True,
+            fail_silently=False,
         )
+        logger.info("Payout failure email sent successfully")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        logger.error(f"Failed to send payout failure email: {e}", exc_info=True)

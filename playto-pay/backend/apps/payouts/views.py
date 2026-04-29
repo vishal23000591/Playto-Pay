@@ -15,6 +15,9 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import threading
+import logging
+
+logger = logging.getLogger(__name__)
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Frame, PageTemplate
@@ -399,6 +402,7 @@ class TopUpView(views.APIView):
             
         def send_email_async():
             try:
+                logger.info(f"Attempting background email for merchant {merchant.name} ({merchant.email})")
                 html_content = render_to_string('emails/topup.html', {
                     'merchant_name': merchant.name,
                     'amount_inr': f"{amount_paise / 100:.2f}",
@@ -411,10 +415,11 @@ class TopUpView(views.APIView):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[merchant.email],
                     html_message=html_content,
-                    fail_silently=True,
+                    fail_silently=False,
                 )
+                logger.info("Background email sent successfully")
             except Exception as e:
-                print(f"Background email failed: {e}")
+                logger.error(f"Background email failed: {e}", exc_info=True)
 
         threading.Thread(target=send_email_async).start()
             
